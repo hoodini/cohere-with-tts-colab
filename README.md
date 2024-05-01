@@ -101,3 +101,16 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 ### `yarn build` fails to minify
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+
+### Requirements
+Make sure to install all required libraries as specified in the notebook. You may need to install:
+- `langchain`
+- `cohere-python`
+- `gtts`
+- `requests`
+
+![Yuval's Image](https://s3-prod-ue1-images.s3.amazonaws.com/image_studio/generated/bee1043327044956920a08330536a2fe.webp)
+
+### About Yuval Avidani
+
+Yuval Avidani is the creator of this web app, which utilizes the Cohere API for text generation and the ElevenLabs API for text-to-speech functionality. This app is designed to showcase the capabilities of these APIs and provide a user-friendly interface for text synthesis and speech generation.

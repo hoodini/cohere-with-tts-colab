@@ -139,7 +139,7 @@ function App() {
         <Box mt={4}>
           <Text fontSize="xl" fontWeight="bold">About Yuval Avidani</Text>
           <Text mt={2}>
-            Yuval Avidani is the creator of this web app, which utilizes the Cohere API for text generation and the ElevenLabs API for text-to-speech functionality. This app is designed to showcase the capabilities of these APIs and provide a user-friendly interface for text synthesis and speech generation.
+            Yuval Avidani is an innovative software engineer and the creator of this web app. With a passion for technology and a keen interest in language processing, Yuval has expertly integrated the Cohere API for text generation and the ElevenLabs API for text-to-speech functionality into this application. This app is a testament to Yuval's skills and dedication to providing user-friendly solutions that leverage cutting-edge technology. For more information about Yuval's work and projects, please visit [Yuval's Portfolio](https://yuval-avidani-portfolio.com).
           </Text>
         </Box>
       </Box>
