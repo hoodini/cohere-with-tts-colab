@@ -47,8 +47,14 @@ app.post('/generate', async (req, res) => {
       audioUrl: elevenLabsResponse.data.url
     });
   } catch (error) {
+if (error.response) {
     console.error('Error generating text or synthesizing speech:', error);
-    res.status(500).json({ message: 'Error generating text or synthesizing speech', error: error.response.data });
+}
+    if (error.response && error.response.data) {
+      res.status(500).json({ message: 'Error generating text or synthesizing speech', error: error.response.data });
+    } else {
+      res.status(500).json({ message: 'Error generating text or synthesizing speech', error: error.message });
+    }
   }
 });
 
