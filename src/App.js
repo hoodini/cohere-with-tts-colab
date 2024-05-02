@@ -141,6 +141,24 @@ function App() {
           <Text mt={2}>
             Yuval Avidani is an innovative software engineer and the creator of this web app. With a passion for technology and a keen interest in language processing, Yuval has expertly integrated the Cohere API for text generation and the ElevenLabs API for text-to-speech functionality into this application. This app is a testament to Yuval's skills and dedication to providing user-friendly solutions that leverage cutting-edge technology. For more information about Yuval's work and projects, please visit [Yuval's Portfolio](https://yuval-avidani-portfolio.com).
           </Text>
+          <Text mt={2}>
+            Instructions for use: Enter your prompt to generate text, then process the input through the TTS service to listen to the output. To use ElevenLabs voices, obtain an API key and voice ID, and enter them in the provided fields.
+          </Text>
+          <Text mt={2}>
+            If you use or reference this project, please credit and cite it!
+          </Text>
+          <Text mt={2}>
+            Connect with me:
+          </Text>
+          <Text mt={2}>
+            - Yuval Avidani on Platform X (@yuvalav)
+          </Text>
+          <Text mt={2}>
+            - <a href="https://linktr.ee/yuvai" target="_blank" rel="noopener noreferrer">My AI Communities and Content</a>
+          </Text>
+          <Box mt={2} style={{ textAlign: 'center' }}>
+            <img src="https://s3-prod-ue1-images.s3.amazonaws.com/image_studio/generated/bee1043327044956920a08330536a2fe.webp" alt="Yuval's Image" style={{ maxWidth: '100%', height: 'auto' }} />
+          </Box>
         </Box>
       </Box>
     </ThemeProvider>
@@ -148,3 +166,4 @@ function App() {
 }
 
 export default App;
+// Test comment for editing
