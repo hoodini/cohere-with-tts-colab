@@ -26,7 +26,7 @@ app.post('/generate', async (req, res) => {
       }
     });
 
-    let audioUrl = '';
+    let audioData = [];
 
     // Determine which TTS service to use based on voiceModel
     if (voiceModel === 'elevenlabs') {
@@ -45,12 +45,15 @@ app.post('/generate', async (req, res) => {
           'Authorization': `Bearer ${ELEVENLABS_API_KEY}`
         }
       });
-      audioUrl = elevenLabsResponse.data.url;
+      res.json({
+        text: cohereResponse.data.text,
+        audioUrl: elevenLabsResponse.data.url
+      });
     } else if (voiceModel === 'roboshaul') {
       // Call the Python script to synthesize speech using Robo-Shaul model
       const pythonProcess = spawn('python3', ['./synthesize.py', text]);
       pythonProcess.stdout.on('data', (data) => {
-        audioUrl = data.toString();
+        audioData.push(data);
       });
       pythonProcess.stderr.on('data', (data) => {
         console.error(`stderr: ${data}`);
@@ -60,10 +63,11 @@ app.post('/generate', async (req, res) => {
         if (code !== 0) {
           return res.status(500).json({ message: 'Error synthesizing speech with Robo Shaul model' });
         }
-        // Respond with generated text and audio URL
+        // Concatenate audio data and respond with generated text and audio
+        const audioBuffer = Buffer.concat(audioData);
         res.json({
           text: cohereResponse.data.text,
-          audioUrl: audioUrl
+          audio: audioBuffer.toString('base64')
         });
       });
     } else {
