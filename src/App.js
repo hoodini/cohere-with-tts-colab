@@ -43,7 +43,7 @@ function App() {
     setLanguage(detectedLanguage);
     // Call Cohere API to generate text
     try {
-      const cohereModel = 'command-r'; // Use 'command-r' model for both English and Hebrew
+      const cohereModel = detectedLanguage === 'he' ? 'xlarge-he-20230207' : 'command-r';
       const cohereResponse = await axios.post('https://api.cohere.ai/generate', {
         model: cohereModel,
         prompt: userInput,
