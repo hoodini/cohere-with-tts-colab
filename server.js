@@ -48,7 +48,7 @@ app.post('/generate', async (req, res) => {
     });
   } catch (error) {
     console.error('Error generating text or synthesizing speech:', error);
-    res.status(500).json({ message: 'Error generating text or synthesizing speech' });
+    res.status(500).json({ message: 'Error generating text or synthesizing speech', error: error.response.data });
   }
 });
 
@@ -56,4 +56,3 @@ const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
