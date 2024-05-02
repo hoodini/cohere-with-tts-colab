@@ -9,6 +9,7 @@ import {
   Textarea,
   Text,
   Spinner,
+  Select,
 } from "@chakra-ui/react";
 import AudioPlayer from "react-audio-player";
 import { customTheme } from "./theme";
@@ -21,6 +22,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [language, setLanguage] = useState('en'); // Default language set to English
+  const [voiceModel, setVoiceModel] = useState('elevenlabs'); // State for voice model selection
 
   const handleInputChange = (event) => {
     setUserInput(event.target.value);
@@ -66,6 +68,13 @@ function App() {
             placeholder="Type something..."
             size="sm"
           />
+        </FormControl>
+        <FormControl mt={4}>
+          <FormLabel htmlFor="voice-model">Select Voice Model</FormLabel>
+          <Select id="voice-model" value={voiceModel} onChange={(e) => setVoiceModel(e.target.value)}>
+            <option value="elevenlabs">ElevenLabs</option>
+            <option value="roboshaul">Robo-Shaul</option>
+          </Select>
         </FormControl>
         <Button
           mt={4}
