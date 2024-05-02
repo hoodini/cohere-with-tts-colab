@@ -43,14 +43,22 @@ def synthesize_text(input_text):
         mel_outputs, mel_outputs_postnet, _, alignments = model.inference(sequence)
         # Debug: Print mel_outputs to check if they are generated correctly
         print("Mel Outputs:", mel_outputs)
+        print("Mel Outputs Postnet:", mel_outputs_postnet)
+        print("Alignments:", alignments)
     except Exception as e:
         print("Error during model inference:", e)
         # Instead of returning None, raise the exception to be caught by the calling function
         raise e
 
+    # Debug: Print the audio before denoising to check if it's generated correctly
+    print("Audio before denoising:", audio)
+
     audio = waveglow.infer(mel_outputs_postnet, sigma=0.6)
     # Applying Denoiser on CPU
     audio_denoised = denoiser(audio, strength=0.01)[:, 0]
+
+    # Debug: Print the denoised audio to check if it's generated correctly
+    print("Denoised Audio:", audio_denoised)
 
     # Return the denoised audio
     return audio_denoised.cpu().numpy()
