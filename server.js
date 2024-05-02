@@ -15,7 +15,7 @@ app.post('/generate', async (req, res) => {
   try {
     // Call Cohere API to generate text
     const cohereResponse = await axios.post('https://api.cohere.ai/generate', {
-      model: 'xlarge',
+      model: 'command',
       prompt: text,
       max_tokens: 50,
       temperature: 0.5,
