@@ -1,6 +1,12 @@
 import numpy as np
 import sys
 import torch
+import os
+
+# Add the tacotron2 and waveglow directories to the Python path to resolve the 'layers' and 'denoiser' modules
+sys.path.append('tacotron2')
+sys.path.append('waveglow')
+
 from hparams import create_hparams
 from model import Tacotron2
 from layers import TacotronSTFT
@@ -13,11 +19,11 @@ def synthesize_text(input_text):
     hparams = create_hparams()
     hparams.sampling_rate = 22050
     model = Tacotron2(hparams)
-    # Correcting the path to the pretrained model
-    model.load_state_dict(torch.load('tacotron2_pretrained_model.pth')['state_dict'])
+    # Correcting the path to the pretrained model and ensuring it's loaded on CPU
+    model.load_state_dict(torch.load('tacotron2/tacotron2_pretrained_model.pth', map_location=torch.device('cpu'))['state_dict'])
     model.eval()
-    # Correcting the path to the pretrained model
-    waveglow = torch.load('waveglow_pretrained_model.pth')['model']
+    # Correcting the path to the pretrained model and ensuring it's loaded on CPU
+    waveglow = torch.load('waveglow/waveglow_pretrained_model.pth', map_location=torch.device('cpu'))['model']
     waveglow.eval()
     for k in waveglow.convinv:
         k.float()
