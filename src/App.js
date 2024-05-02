@@ -43,45 +43,11 @@ function App() {
     setLanguage(detectedLanguage);
     // Call Cohere API to generate text
     try {
-const cohereModel = detectedLanguage === 'he' ? 'xlarge-he-20230207' : 'command';
-      const cohereResponse = await axios.post('https://api.cohere.ai/generate', {
-        model: cohereModel,
-        prompt: userInput,
-        max_tokens: 50,
-        temperature: 0.5,
-      }, {
-        headers: {
-          'Authorization': `Bearer DWbCt3SFbRWNv3hsMo150ZXQQAakr7dTiDf56Iwx`
-        }
-      });
-
-      if (cohereResponse.data && cohereResponse.data.text) {
-        setGeneratedText(cohereResponse.data.text);
-        // Call ElevenLabs API to synthesize speech
-        const elevenLabsResponse = await axios.post(`https://api.elevenlabs.io/v1/text-to-speech/pxg2GegTcg7iZ6yMxi1N`, {
-          text: cohereResponse.data.text,
-          model_id: "eleven_monolingual_v1",
-          voice_settings: {
-            stability: 0.5,
-            similarity_boost: 0.5
-          }
-        }, {
-          headers: {
-            'Accept': 'audio/mpeg',
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer c87393b046adcc0378818a11d2e2e4f1`
-          },
-          responseType: 'blob'
-        });
-
-        if (elevenLabsResponse.data) {
-          // Create a URL for the audio blob
-          const audioBlobUrl = URL.createObjectURL(elevenLabsResponse.data);
-          setAudioUrl(audioBlobUrl);
-        }
-      }
+      const response = await axios.post('https://tts-colab-app-d3106zvt.devinapps.com/generate', { text: userInput });
+      setGeneratedText(response.data.text);
+      setAudioUrl(response.data.audioUrl);
     } catch (error) {
-      console.error('Error during API calls:', error);
+      console.error('Error during API call:', error);
       setError('An error occurred while generating the text. Please try again.');
     }
     setIsLoading(false);
