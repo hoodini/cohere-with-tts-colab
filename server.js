@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const axios = require('axios');
+const { spawn } = require('child_process');
 
 const app = express();
 app.use(express.json());
@@ -46,18 +47,29 @@ app.post('/generate', async (req, res) => {
       });
       audioUrl = elevenLabsResponse.data.url;
     } else if (voiceModel === 'roboshaul') {
-      // Placeholder for Robo-Shaul API call
-      // Since the server lacks GPU support, we cannot directly run the model here.
-      // We would need to set up a separate service that has GPU support and call it here.
-      // For now, we will return a placeholder response.
-      audioUrl = 'https://placeholder.url/for/roboshaul/audio';
+      // Call the Python script to synthesize speech using Robo-Shaul model
+      const pythonProcess = spawn('python3', ['./synthesize.py', text]);
+      pythonProcess.stdout.on('data', (data) => {
+        audioUrl = data.toString();
+      });
+      pythonProcess.stderr.on('data', (data) => {
+        console.error(`stderr: ${data}`);
+      });
+      pythonProcess.on('close', (code) => {
+        console.log(`child process exited with code ${code}`);
+        if (code !== 0) {
+          return res.status(500).json({ message: 'Error synthesizing speech with Robo Shaul model' });
+        }
+        // Respond with generated text and audio URL
+        res.json({
+          text: cohereResponse.data.text,
+          audioUrl: audioUrl
+        });
+      });
+    } else {
+      // If no valid voice model is selected, return an error
+      throw new Error('Invalid voice model selected');
     }
-
-    // Respond with generated text and audio URL
-    res.json({
-      text: cohereResponse.data.text,
-      audioUrl: audioUrl
-    });
   } catch (error) {
     if (error.response) {
       console.error('Error generating text or synthesizing speech:', error);
