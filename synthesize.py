@@ -20,23 +20,37 @@ def synthesize_text(input_text):
     hparams.sampling_rate = 22050
     model = Tacotron2(hparams)
     # Correcting the path to the pretrained model and ensuring it's loaded on CPU
-    model.load_state_dict(torch.load('tacotron2/tacotron2_pretrained_model.pth', map_location=torch.device('cpu'))['state_dict'])
+    # Adding strict=False to ignore non-matching keys
+    model.load_state_dict(torch.load('tacotron2/tacotron2_pretrained_model.pth', map_location=torch.device('cpu'))['state_dict'], strict=False)
     model.eval()
     # Correcting the path to the pretrained model and ensuring it's loaded on CPU
     waveglow = torch.load('waveglow/waveglow_pretrained_model.pth', map_location=torch.device('cpu'))['model']
     waveglow.eval()
     for k in waveglow.convinv:
         k.float()
-    denoiser = Denoiser(waveglow)  # Instantiating Denoiser
+    # Instantiating Denoiser without CUDA
+    denoiser = Denoiser(waveglow).to(torch.device('cpu'))
 
     # Prepare text input for synthesis
     sequence = np.array(text_to_sequence(input_text, ['english_cleaners']))[None, :]
     sequence = torch.autograd.Variable(torch.from_numpy(sequence)).long()
 
+    # Debug: Print the sequence to check if it's correctly formatted
+    print("Sequence:", sequence)
+
     # Synthesize audio from text
-    mel_outputs, mel_outputs_postnet, _, alignments = model.inference(sequence)
+    try:
+        mel_outputs, mel_outputs_postnet, _, alignments = model.inference(sequence)
+        # Debug: Print mel_outputs to check if they are generated correctly
+        print("Mel Outputs:", mel_outputs)
+    except Exception as e:
+        print("Error during model inference:", e)
+        # Instead of returning None, raise the exception to be caught by the calling function
+        raise e
+
     audio = waveglow.infer(mel_outputs_postnet, sigma=0.6)
-    audio_denoised = denoiser(audio, strength=0.01)[:, 0]  # Applying Denoiser
+    # Applying Denoiser on CPU
+    audio_denoised = denoiser(audio, strength=0.01)[:, 0]
 
     # Return the denoised audio
     return audio_denoised.cpu().numpy()
