@@ -68,3 +68,14 @@ if __name__ == '__main__':
     input_text = sys.argv[1]
     audio = synthesize_text(input_text)
     # Output the audio to a file or stdout
+
+print('Debug: Starting model inference')
+try:
+    mel_outputs, mel_outputs_postnet, _, alignments = model.inference(sequence)
+    print('Debug: Model inference completed')
+    print('Debug: mel_outputs:', mel_outputs)
+    print('Debug: mel_outputs_postnet:', mel_outputs_postnet)
+    print('Debug: alignments:', alignments)
+except Exception as e:
+    print('Error during model inference:', e)
+    raise e
