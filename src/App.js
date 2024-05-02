@@ -43,7 +43,7 @@ function App() {
     setLanguage(detectedLanguage);
     // Call Cohere API to generate text
     try {
-      const cohereModel = detectedLanguage === 'he' ? 'cohere-he' : 'cohere-en';
+      const cohereModel = detectedLanguage === 'he' ? 'cohere-he' : 'cohere-2';
       const cohereResponse = await axios.post('https://api.cohere.ai/generate', {
         model: cohereModel,
         prompt: userInput,
