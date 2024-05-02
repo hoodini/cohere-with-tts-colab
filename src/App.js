@@ -20,15 +20,27 @@ function App() {
   const [audioUrl, setAudioUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [language, setLanguage] = useState('en'); // Default language set to English
 
   const handleInputChange = (event) => {
     setUserInput(event.target.value);
+  };
+
+  const detectLanguage = (text) => {
+    // Placeholder function for language detection
+    // In a real-world scenario, this would use a language detection library or API
+    if (/[\u0590-\u05FF]/.test(text)) {
+      return 'he'; // Hebrew regex match
+    }
+    return 'en'; // Default to English
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
     setError('');
+    const detectedLanguage = detectLanguage(userInput);
+    setLanguage(detectedLanguage);
     // Call Cohere API to generate text
     try {
       const cohereResponse = await axios.post('https://api.cohere.ai/generate', {
@@ -56,7 +68,7 @@ function App() {
           headers: {
             'Accept': 'audio/mpeg',
             'Content-Type': 'application/json',
-            'xi-api-key': 'c87393b046adcc0378818a11d2e2e4f1'
+            'Authorization': `Bearer c87393b046adcc0378818a11d2e2e4f1`
           },
           responseType: 'blob'
         });
@@ -122,6 +134,13 @@ function App() {
         {isLoading && (
           <Spinner size="xl" />
         )}
+        {/* About Section */}
+        <Box mt={4}>
+          <Text fontSize="xl" fontWeight="bold">About Yuval Avidani</Text>
+          <Text mt={2}>
+            Yuval Avidani is the creator of this web app, which utilizes the Cohere API for text generation and the ElevenLabs API for text-to-speech functionality. This app is designed to showcase the capabilities of these APIs and provide a user-friendly interface for text synthesis and speech generation.
+          </Text>
+        </Box>
       </Box>
     </ThemeProvider>
   );
