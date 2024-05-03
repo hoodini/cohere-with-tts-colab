@@ -3,7 +3,6 @@ import numpy as np
 import sys
 import torch
 import os
-import traceback
 
 # Add the tacotron2 and waveglow directories to the Python path to resolve the 'layers' and 'denoiser' modules
 sys.path.append('tacotron2')
@@ -49,17 +48,29 @@ def synthesize_text(input_text):
         print("Alignments:", alignments)
     except Exception as e:
         print("Error during model inference:", e)
-    traceback.print_exc()
         traceback.print_exc()
         # Instead of returning None, raise the exception to be caught by the calling function
         raise e
 
-    audio = waveglow.infer(mel_outputs_postnet, sigma=0.6)
-    # Applying Denoiser on CPU
-    audio_denoised = denoiser(audio, strength=0.01)[:, 0]
+    # Generate audio from mel spectrogram using WaveGlow
+    try:
+        audio = waveglow.infer(mel_outputs_postnet, sigma=0.6)
+        # Debug: Print the generated audio to check if it's correct
+        print("Generated Audio:", audio)
+    except Exception as e:
+        print("Error during audio generation:", e)
+        traceback.print_exc()
+        raise e
 
-    # Debug: Print the denoised audio to check if it's generated correctly
-    print("Denoised Audio:", audio_denoised)
+    # Apply denoiser to the generated audio
+    try:
+        audio_denoised = denoiser(audio, strength=0.01)[:, 0]
+        # Debug: Print the denoised audio to check if it's correct
+        print("Denoised Audio:", audio_denoised)
+    except Exception as e:
+        print("Error during audio denoising:", e)
+        traceback.print_exc()
+        raise e
 
     # Return the denoised audio
     return audio_denoised.cpu().numpy()
