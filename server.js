@@ -53,14 +53,18 @@ app.post('/generate', async (req, res) => {
       // Call the Python script to synthesize speech using Robo-Shaul model
       const pythonProcess = spawn('python3', ['./synthesize.py', text]);
       pythonProcess.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`);
         audioData.push(data);
       });
       pythonProcess.stderr.on('data', (data) => {
         console.error(`stderr: ${data}`);
       });
+      pythonProcess.on('error', (error) => {
+        console.error(`error: ${error.message}`);
+      });
       pythonProcess.on('close', (code) => {
-        console.log(`child process exited with code ${code}`);
         if (code !== 0) {
+          console.error(`child process exited with code ${code}`);
           return res.status(500).json({ message: 'Error synthesizing speech with Robo Shaul model' });
         }
         // Concatenate audio data and respond with generated text and audio
